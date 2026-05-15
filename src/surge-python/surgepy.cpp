@@ -1070,6 +1070,39 @@ PYBIND11_MODULE(surgepy, m)
                  return std::string("<SurgeSynthesizer samplerate=") +
                         std::to_string((int)s.storage.samplerate) + "Hz>";
              })
+        .def_property("tempo",
+                      [](SurgeSynthesizerWithPythonExtensions &s) { return s.time_data.tempo; },
+                      [](SurgeSynthesizerWithPythonExtensions &s, double v) {
+                          s.time_data.tempo = v;
+                          s.resetStateFromTimeData();
+                      },
+                      "The internal tempo of the synthesizer in BPM")
+        .def_property("ppqPos",
+                      [](SurgeSynthesizerWithPythonExtensions &s) { return s.time_data.ppqPos; },
+                      [](SurgeSynthesizerWithPythonExtensions &s, double v) {
+                          s.time_data.ppqPos = v;
+                          s.resetStateFromTimeData();
+                      },
+                      "The current playback position in pulses per quarter note")
+        .def_property("timeSigNumerator",
+                      [](SurgeSynthesizerWithPythonExtensions &s) {
+                          return s.time_data.timeSigNumerator;
+                      },
+                      [](SurgeSynthesizerWithPythonExtensions &s, int v) {
+                          s.time_data.timeSigNumerator = v;
+                          s.resetStateFromTimeData();
+                      },
+                      "The numerator of the time signature")
+        .def_property("timeSigDenominator",
+                      [](SurgeSynthesizerWithPythonExtensions &s) {
+                          return s.time_data.timeSigDenominator;
+                      },
+                      [](SurgeSynthesizerWithPythonExtensions &s, int v) {
+                          s.time_data.timeSigDenominator = v;
+                          s.resetStateFromTimeData();
+                      },
+                      "The denominator of the time signature")
+
         .def("getControlGroup", &SurgeSynthesizerWithPythonExtensions::getControlGroup,
              "Gather the parameters groups for a surge.constants.cg_ control group",
              py::arg("entry"))
